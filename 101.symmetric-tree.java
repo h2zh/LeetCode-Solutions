@@ -1,4 +1,7 @@
+import java.util.LinkedList;
 import java.util.Queue;
+
+import javax.swing.tree.TreeNode;
 
 /*
  * @lc app=leetcode id=101 lang=java
@@ -34,19 +37,27 @@ import java.util.Queue;
 class Solution {
     public boolean isSymmetric(TreeNode root) {
         if (root == null)
-            return true;
-        return help(root.left, root.right);
-
-    }
-
-    public boolean help(TreeNode left, TreeNode right) {
-        if (left == null && right == null)
-            return true;
-        if (left == null || right == null)
             return false;
-        if (left.val != right.val)
-            return false;
-        return help(left.left, right.right) && help(left.right, right.left);
-    }
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root.left);
+        q.offer(root.right);
+        while (!q.isEmpty()) {
+            TreeNode l = q.poll();
+            TreeNode r = q.poll();
+            if (l == null && r == null)
+                continue; // jump to next while loop
+            if ((l == null && r != null) || (l != null && r == null))
+                return false;
+            if (l.val != r.val)
+                return false;
+            
+            q.offer(l.left);
+            q.offer(r.right);
+            q.offer(l.right);
+            q.offer(r.left);
+        }
+        return true;
+    }    
+
 }
 // @lc code=end
